@@ -1,4 +1,4 @@
-//obtener elementos de HTML por ID
+//obtener elementos del DOM por ID y crear variables
 var inputObjeto = document.getElementById('textObjeto');
 var inputElemento = document.getElementById('inputElementoColeccionable');
 var botonGuardarObjeto = document.getElementById('guardarObjeto');
@@ -11,9 +11,7 @@ var seccionInstrucciones = document.getElementById('instrucciones');
 var listaDeColeccion = document.getElementById('listaColeccion');
 var elementos = []
 
-
-
-//Sección para definir qué elementos se van a mostrar al cargar la página
+//Sección para definir qué elementos se van a mostrar al cargar la página (el localstorage define si se muestran algunos elementos)
 window.onload = () => {
     const elementosColeccionables = JSON.parse(window.localStorage.getItem('elementos') || "[]");
     elementos = elementosColeccionables;
@@ -22,12 +20,28 @@ window.onload = () => {
     });
     if(window.localStorage.getItem('objeto') !== null){
         Header.innerText = 'Mi colección de ' + window.localStorage.getItem('objeto');
+        const editarObjeto = document.createElement('button')
+        editarObjeto.innerHTML = 'Cambiar'
+        editarObjeto.addEventListener('click', () => {
+            window.localStorage.removeItem('objeto');
+            location.reload();
+        })
+        Header.appendChild(editarObjeto)
+
     }
     if(window.localStorage.getItem('ocultarInstructivo') !== null){
         var borrado = seccionInstrucciones.parentNode.removeChild(seccionInstrucciones);
+        const regresarInstructivo = document.createElement('button')
+        regresarInstructivo.innerHTML = 'Mostrar instrucciones'
+        regresarInstructivo.addEventListener('click', () => {
+            window.localStorage.removeItem('ocultarInstructivo');
+            location.reload();
+        })
+        seccionInstructivo.appendChild(regresarInstructivo)
     }
 }
-//funcion para agregar elementos a la lista
+
+// funcion y botón para agregar elementos a la lista
 function agregarElemento(nuevoElemento){
         const elementoObjeto = {id:Math.random() ,...nuevoElemento};
         elementos.push(elementoObjeto);
@@ -42,7 +56,7 @@ botonAgregarElemento.addEventListener('click',() => {
     location.reload();
 })
 
-//funcion y boton para eliminar elemento
+//funcion para eliminar elemento de la lista
 function eliminarElemento(idelemento){
     const listafiltrada = elementos.filter((elemento) =>{
         return elemento.id != idelemento
@@ -52,37 +66,16 @@ function eliminarElemento(idelemento){
     location.reload();
 }
 
-
+//funcion para editar un elemento de la lista
 function editarElemento(idelemento){
     console.log(idelemento)
     agregarAlDomParaEdit(idelemento)
 }
-//funcion para agregar los elementos de la colección en el DOM
-function agregaralHTML(elemento){
-    const li = document.createElement('li')
-    li.setAttribute('id','li' + elemento.id)
-    li.setAttribute('class','lista')
-    const botonEdit = document.createElement('button')
-    botonEdit.addEventListener('click',() => {
-        editarElemento(elemento.id)
-        
-    })
-    const botonElim = document.createElement('button')
-    botonElim.addEventListener('click',() => {
-        eliminarElemento(elemento.id)
-    })
-    const p = document.createElement('p')
-    p.textContent = elemento.name;
-    botonEdit.innerHTML = 'Editar'
-    botonElim.innerHTML = 'Eliminar'
-    li.appendChild(p)
-    li.appendChild(botonElim)
-    li.appendChild(botonEdit)
-    listaDeColeccion.appendChild(li)
-}
+// Funcion que agrega al DOM el input y botones para editar un elemento de la lista 
 function agregarAlDomParaEdit(idelemento){
     const lugarDeLaLista = document.getElementById('li' + idelemento)
     const inputEdit = document.createElement('input')
+    inputEdit.setAttribute('placeholder','Nuevo Nombre')
     const botonsave = document.createElement('button')
     botonsave.addEventListener('click',() => {
         eliminarElemento(idelemento)
@@ -99,8 +92,34 @@ function agregarAlDomParaEdit(idelemento){
     ul.appendChild(botonsave)
     ul.appendChild(botonCancelar)
     lugarDeLaLista.appendChild(ul)
+    lugarDeLaLista.removeChild(document.getElementById(idelemento + 'E'));
 } 
-//boton para ocultar instructivo
+
+//funcion que agrega los elementos de la colección en el DOM
+function agregaralHTML(elemento){
+    const li = document.createElement('li')
+    li.setAttribute('id','li' + elemento.id)
+    li.setAttribute('class','lista')
+    const botonEdit = document.createElement('button')
+    botonEdit.setAttribute('id',elemento.id + 'E')
+    botonEdit.addEventListener('click',() => {
+        editarElemento(elemento.id)
+    })
+    const botonElim = document.createElement('button')
+    botonElim.addEventListener('click',() => {
+        eliminarElemento(elemento.id)
+    })
+    const p = document.createElement('p')
+    p.textContent = elemento.name;
+    botonEdit.innerHTML = 'Editar'
+    botonElim.innerHTML = 'Eliminar'
+    li.appendChild(p)
+    li.appendChild(botonElim)
+    li.appendChild(botonEdit)
+    listaDeColeccion.appendChild(li)
+}
+
+//boton para ocultar sección de instructivo
 botonOcultarInstructivo.addEventListener('click',() => {
     const ocultarInstructivo = 1;
     window.localStorage.setItem('ocultarInstructivo', ocultarInstructivo);
