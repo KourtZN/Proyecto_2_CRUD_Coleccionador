@@ -35,6 +35,10 @@ input{
     margin:0;
     padding:0;
 }
+.header button{
+    width:10%;
+    margin: auto;
+}
 .instructivo{
     margin-left: auto;
     margin-right: auto;
@@ -53,6 +57,7 @@ input{
     width:60%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 80px;
     
 }
 .lista{
@@ -72,8 +77,12 @@ input{
     margin: 0;
 }
 .footer{
+    background-color: brown;
     text-align: center;
-    margin: 20px 0;
+    position:fixed;
+    bottom: 0;
+    margin:0;
     width: 100%;
-    height: 30px;  
+    padding: 10px 0;
+
 }

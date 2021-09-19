@@ -26,7 +26,7 @@ window.onload = () => {
             window.localStorage.removeItem('objeto');
             location.reload();
         })
-        Header.appendChild(editarObjeto)
+        Header.parentNode.appendChild(editarObjeto)
 
     }
     if(window.localStorage.getItem('ocultarInstructivo') !== null){
